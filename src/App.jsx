@@ -7,7 +7,7 @@ function App() {
   return (
     <>
 
-     <h1>React-starter-code</h1>
+     <h1>Reactstartercode</h1>
    
     </>
   );
