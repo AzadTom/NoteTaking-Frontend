@@ -2,8 +2,10 @@ import { useState } from "react";
 import Input from "./Input.jsx";
 import {validateUserDetail} from './validate.js';
 import { useNavigate } from "react-router-dom";
-import {signupuser} from '../../reducer/authSlicer.js';
+import {signupuser,removeError} from '../../reducer/authSlicer.js';
 import { useDispatch, useSelector } from "react-redux";
+import Close from "@mui/icons-material/Close.js";
+
 
 
 const SignUp =()=>{
@@ -27,6 +29,29 @@ const SignUp =()=>{
             comfirm:""
         }
     });
+
+
+
+    const removeErrorState =(e)=>{
+
+         e.preventDefault();
+
+        dispatch(removeError());
+
+        setUserDetail({
+            name:"",
+            email:"",
+            password:"",
+            comfirm:"",
+            error:{
+                name:"",
+                email:"",
+                password:"",
+                comfirm:""
+            }
+        })
+
+    }
 
     const onchange =(e)=>{
 
@@ -58,18 +83,11 @@ const SignUp =()=>{
          if(isValid)
          {
             
-            try {
+            dispatch(signupuser(userDetail));
+            
+           
+            
 
-                const response = dispatch(signupuser(userDetail.name,userDetail.email,userDetail.password))
-
-                console.log(response);
-                
-                
-
-            } catch (error) {
-                
-                console.log(error);
-            }
          }
          else
          {
@@ -81,12 +99,19 @@ const SignUp =()=>{
     }
 
 
+
+
     if(error)
     {
         return(
             <>
              <section className="flex justify-center items-center w-full h-screen">
-                <h2 className="p-8 shadow-lg">{error}</h2>
+                <div className="shadow-lg">
+                 <div className="flex justify-end p-4">
+                 <button onClick={(e)=> removeErrorState(e)}> <Close/></button>
+                 </div>
+                <h2 className="p-4">{error}</h2>
+                </div>
              </section>
             </>
         )
@@ -95,14 +120,15 @@ const SignUp =()=>{
 
     if(user)
     {
-        return(
-            <>
-             <section className="flex justify-center items-center w-full h-screen">
-                <h2 className="p-8 shadow-lg">{user}</h2>
-             </section>
-            </>
-        )
+
+         const userDetail = JSON.stringify(user);
+         localStorage.setItem("userDetail",userDetail);
+         navigate("/notes");
+        
     }
+
+
+    
 
 
     return(

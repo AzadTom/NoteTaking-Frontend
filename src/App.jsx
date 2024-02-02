@@ -2,18 +2,24 @@ import React from "react";
 import {Routes,Route} from 'react-router-dom';
 
 
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import HomePage from './pages/Homepage';
 import Notes from "./pages/Notes";
 
 import SignUp from './components/Authentication/SignUp';
 import SignIn from './components/Authentication/SignIn';
+import Profile from "./pages/Profile";
 
-import CreateNote from "./components/CreateNote";
+import CreateNote from "./components/Note/CreateNote";
+
 
 
 
 function App() {
+
+
+  
+
   return (
     <>
     <Header/>
@@ -21,6 +27,7 @@ function App() {
       <Route path="/" element={<HomePage/>}/>
       <Route path="/signup" element={<SignUp/>}/>
       <Route path="/signin" element={<SignIn/>}/>
+      <Route path="/profile" element={<Profile/>}/>
       <Route path="/create/:id" element={<CreateNote/>}/>
       <Route path="/notes" element={<Notes/>}/>
     </Routes>

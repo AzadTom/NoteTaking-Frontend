@@ -1,19 +1,32 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {signup,signin,logout} from '../services/authservice.js';
+import {signup,signin} from '../services/authservice.js';
 
 
 const initialState = {
 
-     user:null,
+     user:"",
      isloading:false,
-     error:null
+     error:""
 
 }
 
  const authSlicer = createSlice({
     name:"auth",
     initialState:initialState,
-    reducers:{},
+    reducers:{
+
+      removeError:(state,action)=>{
+
+         state.error = "";
+
+      },
+
+      removeUser:(state,action)=>{
+
+         state.user  = "";
+      }
+
+    },
     extraReducers:(builder)=>{
 
       builder.addCase(signupuser.pending,(state)=>{
@@ -25,14 +38,18 @@ const initialState = {
 
          state.isloading = false;
          state.user = action.payload;
+
+         console.log("signup",action.payload);
+         
       })
       .addCase(signupuser.rejected,(state,action)=>{
 
 
         state.isloading = false;
-        state.error = action.error.message;
+        state.error =  action.payload.response.data.message;
+       
 
-
+   
       })
       .addCase(loginuser.pending,(state)=>{
          state.isloading = true;
@@ -41,55 +58,70 @@ const initialState = {
 
             state.user = action.payload;
             state.isloading = false;
+            console.log("login",action.payload);
       })
       .addCase(loginuser.rejected,(state,action)=>{
 
          state.error = action.error.message;
          state.isloading = false;
       })
-      .addCase(logoutuser.pending,(state)=>{
-         state.isloading = true
-      })
-      .addCase(logoutuser.fulfilled,(state,action)=>{
-         
-         state.isloading = false;
-         state.user = null;
-      }) 
-      .addCase(logoutuser.rejected,(state,action)=>{
-
-         state.isloading = false;
-         state.error = action.error.message;
-      }) 
-
+     
     }
  })
 
 
 
  export default authSlicer.reducer;
+ export const {removeError ,removeUser} = authSlicer.actions;
 
 
 
 
 
-
- export const signupuser = createAsyncThunk("/signup",async(name,email,password)=>{
-
-
-        const response  = await signup(name,email,password);
-
-        return response.data;
+ export const signupuser = createAsyncThunk("/user/signup",async(userDetail,{rejectWithValue})=>{
 
 
+         
+
+            try {
+
+               const {name,email,password} = userDetail;
+
+               const response  = await signup(name,email,password);
+
+               return response.data;
+               
+            } catch (error) {
+               
+                
+                return rejectWithValue(error);
+            }
+            
+          
+            
+            
  })
 
 
- export const loginuser = createAsyncThunk("/login",async(email,password)=>{
+ export const loginuser = createAsyncThunk("/login",async(userDetail,{rejectWithValue})=>{
 
 
-    const response  = await signin(email,password);
+      
 
-    return response.data;
+         try{
+
+            const response  = await signin(userDetail.email,userDetail.password);
+
+            return response.data;
+
+         } catch(error){
+
+            return rejectWithValue(error);
+         }
+
+         
+         
+      
 
 
 })
@@ -97,12 +129,3 @@ const initialState = {
 
 
 
-export const logoutuser = createAsyncThunk("/logout",async()=>{
-
-
-    const response  = await logout();
-
-    return response.data;
-
-
-})

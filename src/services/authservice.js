@@ -14,7 +14,10 @@ export const signup = async(name,email,password)=>
     
         },
         withCredentials:true
-      })
+      }) 
+
+
+
 
 }
 
@@ -38,14 +41,7 @@ export const signin = async(email,password)=>{
 
 
 
-export const logout = async()=>{
-    return await axios.get(`${BASEURL}/api/v1/users/logout`,{
-        headers:{
-          "Content-Type":"application/json",
-        },
-        withCredentials:true
-      });
-}
+
 
 
 

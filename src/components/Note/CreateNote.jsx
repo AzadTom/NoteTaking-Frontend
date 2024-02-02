@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {createdata} from '../reducer/fakeSlicer.js';
 import { useDispatch, useSelector } from "react-redux";
+import { createnote } from '../../services/noteservice.js';
 
 const CreateNote =()=>{
 
@@ -10,28 +10,40 @@ const CreateNote =()=>{
 
 
     const navigate = useNavigate();
-    const dispatch = useDispatch()
 
-    const {fakedata} = useSelector((state)=>(state.fake));
 
-    const item = fakedata[id];
+    const data  = localStorage.getItem("userDetail");
+    const userDetail = JSON.parse(data);
+
+    const token = userDetail.token;
+
+   
 
     const[content,setContent]= useState({
-        title: item && item.title || "",
-        content:item && item.content || ""
+        title:  "",
+        content: ""
     })
 
 
-    const save = (e)=>{
+    const save = async(e)=>{
 
         e.preventDefault();
 
+       
+
         if(!content.title=="" || !content.content=="")
         {
-            dispatch(createdata({id,content}));
+            
+            const response  =  await createnote(token,content.title,content.content);
+            if(response)
+            {
+                console.log(response);
+                navigate("/notes");
+
+            }
         }
        
-        navigate("/notes");
+        
         
     }
 
