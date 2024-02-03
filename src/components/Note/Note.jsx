@@ -37,7 +37,7 @@ const Note = ({title,content,onclick ,deleteNote})=>{
              <span className="cursor-pointer bg-red-600 p-1 rounded-md" onClick={openoption}> 
              <img src="/More.png" alt="more" className="w-[20px] h-full"  />
              </span>
-             {open && <div className="absolute  -top-[2rem] -right-[4rem] p-2 bg-black border border-white rounded-md cursor-pointer" onClick={deletingNote}>Delete</div> }
+             {open && <div className="absolute  -top-[4rem]  -right-[1rem] p-2 bg-black border border-white rounded-md cursor-pointer" onClick={deletingNote}>Delete</div> }
              
 
 

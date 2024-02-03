@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createnote } from '../../services/noteservice.js';
+import { createnote ,updatenote ,getnote} from '../../services/noteservice.js';
 
 const CreateNote =()=>{
 
@@ -34,18 +34,67 @@ const CreateNote =()=>{
         if(!content.title=="" || !content.content=="")
         {
             
-            const response  =  await createnote(token,content.title,content.content);
-            if(response)
-            {
-                console.log(response);
-                navigate("/notes");
+             if(id != -1)
+             {
+                const response  = await  updatenote(token,id,content.title,content.content);
+                if(response)
+                {
+                    console.log(response);
+                    navigate("/notes");
+    
+                }
+             }
+             else
+             {
+                const response  =  await createnote(token,content.title,content.content);
+                if(response)
+                    {
+                        console.log(response);
+                        navigate("/notes");
 
-            }
+                    }
+             }
+           
+            
         }
        
         
         
     }
+
+
+    useEffect(()=>{
+
+
+        const setData= async()=>{
+
+           if(id != -1)
+           {
+              const response  = await  getnote(token,id);
+              
+              if(response)
+              {
+                  const { isSuccessfull} = response.data;
+
+                  console.log(isSuccessfull);
+
+                  setContent({
+                    title: isSuccessfull.title,
+                    content: isSuccessfull.content
+                  });
+                 
+
+              }
+           }
+
+        }
+
+       setData();
+
+
+    },[])
+
+    
 
     return(
         <>
