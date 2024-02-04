@@ -5,6 +5,7 @@ import {getnotes ,deletenote} from '../services/noteservice.js'
 import { invitesharenote} from '../services/collabservice.js';
 import { useEffect, useState } from "react";
 
+import AddIcon from '@mui/icons-material/Add';
 
 const Notes = ()=>{
 
@@ -57,6 +58,7 @@ const Notes = ()=>{
 
          
           const response  = await  token && deletenote(token,noteid);
+         
 
           if(response)
           {
@@ -78,9 +80,13 @@ const Notes = ()=>{
         <>
         <section className="mx-4 my-2 ">
           <CollabNotes token={token}/>
-        <h2 className="text-2xl font-semibold my-2">Notes</h2>
+        {<h2 className="text-2xl font-semibold my-2">Notes</h2>}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 gap-4 sm:gap-8">
-          {notes.map((item,index)=>(<Note {...item} key={index} onclick={()=> open(item._id)} deleteNote={()=> deleteNote(item._id)}/> ))}  
+          {notes && notes.map((item,index)=>(<Note {...item} key={index} onclick={()=> open(item._id)} deleteNote={()=> deleteNote(item._id)}/> ))}  
+          {notes.length == 0  && 
+          <div className='w-[300px] h-[250px] bg-black rounded-md text-white flex justify-center items-center'>
+              <h2 className='text-3xl font-semibold'>Empty <br /> Notes!</h2>
+          </div>} 
         </div>
         <button className="fixed bottom-8 right-8 px-4 py-2 bg-blue-600 rounded-md text-white" onClick={()=> navigate("/create/-1")}><Add/> Create note</button>
         </section>
@@ -102,34 +108,42 @@ const CollabNotes = ({token})=>{
       const getCollabs = async()=>{
 
         const response  = await invitesharenote(token);
-
-        setcollabs(response.data.inviteuser[0]);
-
-        console.log(collabs[0]);
-
-      
+        setcollabs([...response.data.collabnotes])
       }
 
       getCollabs();
 
-   },[])
+   },[collabs])
 
   return(
     <div>
-       <h2 className='text-2xl font-semibold'>CollabNotes</h2>
-       <div className='flex gap-2 overflow-scroll'>
-         {collabs.length && collabs.map((item)=>(<CollabNote key={item._id} title={item.title} content={item.content}/>))} 
+       {collabs.length> 0 && <h2 className='text-2xl font-semibold'>CollabNotes</h2>}
+       <div className='flex gap-4 overflow-scroll'>
+         {collabs && collabs?.map((item)=>(<CollabNote key={item[0]?._id} id={item[0]?._id} title={item[0]?.title} content={item[0]?.content}/>))} 
        </div>
     </div>
   )
 
 }
 
-const CollabNote = ({title = "Title",content="Content"})=>{
+const CollabNote = ({id ="-1",title = "Title",content="Content"})=>{
+
+
+  const navigate  = useNavigate();
+
+
+  const doUpdate = ()=>{
+
+    navigate(`/collabupdate/${id}`);
+
+  }
 
    
   return(
-    <div className='flex flex-col  bg-black text-white w-[300px] h-[300px] px-4 py-2 rounded-md'>
+    <div className='relative flex-none w-[300px] sm:w-[450px] h-[250px] flex flex-col  bg-black text-white px-4 py-2 rounded-md' onClick={()=> doUpdate()}>
+       <span className="absolute right-2 top-2 cursor-pointer bg-red-600 p-1 rounded-md"> 
+             <img src="/More.png" alt="more" className="w-[20px] h-full"   onClick={()=> doUpdate()}/>
+             </span>
       <h1>{title}</h1>
       <p>{content}</p>
     </div>

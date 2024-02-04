@@ -1,12 +1,12 @@
 import axios from 'axios';
 import {BASEURL} from '../utils/constant.js';
 
-export const sharenote = async(token,noteid,emailslist)=>
+export const sharenote = async(token,noteid,email)=>
 {
 
      return await axios.post(`${BASEURL}/api/v1/collabs`,{
         noteid:noteid,
-        emailslist:emailslist,
+        email:email,
      },{
           headers:{
                "Content-Type":"application/json",
@@ -42,3 +42,36 @@ export const invitesharenote = async(token)=>
      });
 
 }
+
+export const getCollabnote = async(token,noteid)=>
+{
+
+     return await axios.get(`${BASEURL}/api/v1/collabs/note/${noteid}`,{
+          headers:{
+               "Content-Type":"application/json",
+               "Authorization":`Bearer ${token}`
+          }
+     });
+
+}
+
+
+export const getupdateCollabnote = async(token,noteid,title,content)=>
+{
+
+     return await axios.put(`${BASEURL}/api/v1/collabs/update/${noteid}`
+     ,{
+          title:title,
+          content:content
+      }
+     ,{
+          headers:{
+               "Content-Type":"application/json",
+               "Authorization":`Bearer ${token}`
+          }
+     });
+
+}
+
+
+

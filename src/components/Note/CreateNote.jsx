@@ -110,16 +110,18 @@ const CreateNote =()=>{
         try{
 
             setinviteuser((prev)=>([...prev,user]));
-            setUser("");
+           
 
             if(id != -1)
             {
-                const response  = await sharenote(token,id,inviteuser);
+                const response  = await sharenote(token,id,user);
                 if(response)
                 {
                     console.log(response.data);
                 }
             }
+
+            setUser("");
 
 
         }catch(err){
@@ -136,14 +138,14 @@ const CreateNote =()=>{
         <div className="flex flex-col mx-4 my-2">
             <div className="relative">
             <span className="cursor-pointer rounded-md flex justify-end py-2" onClick={()=> setopen((prev)=>(!prev))}> 
-             <img src="/More1.png" alt="more" className="w-[20px] h-full"  />
+             <img src="/More1.png" alt="more" className={id != -1 ?"w-[20px] h-full":"hidden"}  />
             </span>
             {open && <div className="absolute right-0 w-[300px]  px-4 py-2 bg-black text-white">
-                   <h2 className="cursor-pointer" onClick={()=> setopen1((prev)=>(!prev))}>Invite users</h2>
-                   {inviteuser && <div className="flex flex-col gap-2 py-2">{ inviteuser.map((user)=>( <h2>{user}</h2> ))}</div> }
+                   <h2 className="cursor-pointer text-xs" onClick={()=> setopen1((prev)=>(!prev))}>Invite users</h2>
+                   {inviteuser && <div className="flex flex-col gap-2 py-2 text-xs">{ inviteuser.map((user)=>( <h2 key={user._id}>{user}</h2> ))}</div> }
                    {<div className="flex flex-col gap-2">
-                       <input type="email" placeholder="Enter email" className="px-4 py-2 text-black" value={user} onChange={(e)=> setUser(e.target.value)} required/> 
-                       <button className="px-4 py-2"  onClick={submitComplete}>Submit</button>
+                       <input type="email" placeholder="Enter email" className="px-4 py-2 text-black text-xs" value={user} onChange={(e)=> setUser(e.target.value)} required/> 
+                       <button className="px-4 py-2 text-xs"  onClick={submitComplete}>Submit</button>
                    </div> }
             </div> }
             </div>

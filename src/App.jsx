@@ -11,6 +11,7 @@ import SignIn from './components/Authentication/SignIn';
 import Profile from "./pages/Profile";
 
 import CreateNote from "./components/Note/CreateNote";
+import UpdateCollabNote  from './components/Note/UpdateCollabNote';
 
 
 
@@ -29,6 +30,7 @@ function App() {
       <Route path="/signin" element={<SignIn/>}/>
       <Route path="/profile" element={<Profile/>}/>
       <Route path="/create/:id" element={<CreateNote/>}/>
+      <Route path="/collabupdate/:id" element={<UpdateCollabNote/>}/>
       <Route path="/notes" element={<Notes/>}/>
     </Routes>
     </>
